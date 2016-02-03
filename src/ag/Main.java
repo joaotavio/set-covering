@@ -8,9 +8,10 @@ import java.io.InputStreamReader;
 
 public class Main {
 
-    
+    private static AlgoritmoGenetico ag;
     public static void main(String[] args) throws IOException {
         lerArquivo("Teste_01.dat");
+        ag.executar();
     }
     
     public static void lerArquivo(String nomeArquivo) throws FileNotFoundException, IOException{
@@ -30,19 +31,25 @@ public class Main {
         String strNumColuna = linha.substring(linha.indexOf(" ")).trim();
         int numColuna = Integer.parseInt(strNumColuna);
         
+        ag = new AlgoritmoGenetico(numLinha, numColuna);
+        
         br.readLine();
         
-        System.out.println("LINHA: " + numLinha);
-        System.out.println("COLUNA: " + numColuna);
+        //System.out.println("LINHA: " + numLinha);
+        //System.out.println("COLUNA: " + numColuna);
         
         for (int i = 0; i < numColuna; i++) {
             linha = br.readLine();
-            String linhas[] = linha.split("\\s+");
+            String dados[] = linha.split("\\s+");
             
-            for (int j = 0; j < linhas.length; j++) {
-                System.out.print(linhas[j] + " - ");
+            double custo = Double.parseDouble(dados[2]);
+            ag.addCusto(i, custo);
+           
+            for (int j = 3; j < dados.length; j++) {
+                ag.addDados(i, Integer.parseInt(dados[j]));
+                //System.out.print(dados[j] + " - ");
             }
-            System.out.println();
+            //System.out.println();
         }
         
     }
