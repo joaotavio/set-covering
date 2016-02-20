@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class AlgoritmoGenetico {
     
-    public static final int TAM_POPULACAO = 5;
+    public static final int TAM_POPULACAO = 5000;
     
     //pode ser vetor e pode ser hash set 
     private ArrayList<Integer>[] listaColuna;

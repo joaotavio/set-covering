@@ -8,6 +8,7 @@ public class Cromossomo {
     //Lista de indices das colunas que pertencem a solução
     private ArrayList<Integer> colunas;
     private double custoTotal;
+    private int[] qtdColunaCobreLinha;
 
     public Cromossomo() {
         colunas = new ArrayList<>();
@@ -23,7 +24,7 @@ public class Cromossomo {
         return colunas;
     }
     
-    public static void gerarIndividuo(ArrayList<Integer>[] listaLinha, ArrayList<Integer>[] listaColuna, Double[] listaCusto){
+    public void gerarIndividuo(ArrayList<Integer>[] listaLinha, ArrayList<Integer>[] listaColuna, Double[] listaCusto){
         //listaLinha = ALFA
         //listaColuna = BETA
         
@@ -32,8 +33,7 @@ public class Cromossomo {
             linhasDescobertas.add(i);
         }
         
-        int qtdColunaCobreLinha[] = new int[listaLinha.length];
-        Cromossomo cromossomo = new Cromossomo();
+        qtdColunaCobreLinha = new int[listaLinha.length];
         
         while (!linhasDescobertas.isEmpty()){
             int random_pos = Util.getRandomInt(linhasDescobertas.size());
@@ -42,7 +42,7 @@ public class Cromossomo {
             ArrayList<Integer> conjuntoColuna = listaLinha[linha];
             int menorColuna = colunaMinimizaCusto(conjuntoColuna, linhasDescobertas, listaColuna, listaCusto);
             
-            cromossomo.addColuna(menorColuna, listaCusto[menorColuna]);
+            this.addColuna(menorColuna, listaCusto[menorColuna]);
             removerCobertos(qtdColunaCobreLinha, linhasDescobertas, listaColuna[menorColuna]);
         }
     }
@@ -70,7 +70,29 @@ public class Cromossomo {
         }
     }
     
-    public void eliminaRedundancia(){
-        
+    public void eliminaRedundancia(ArrayList<Integer>[] listaColuna){
+        ArrayList<Integer> T = new ArrayList<>(this.colunas);
+        while (!T.isEmpty()){
+            int random_pos = Util.getRandomInt(T.size());
+            int coluna = T.get(random_pos);
+            T.remove(random_pos);
+            
+            if (isRedundante(listaColuna[coluna])){
+                this.colunas.remove(new Integer(coluna));
+                
+                for (Integer linha : listaColuna[coluna]) {
+                    qtdColunaCobreLinha[linha]--;
+                }
+            }
+        }
+    }
+    
+    private boolean isRedundante(ArrayList<Integer> conjuntoLinha){
+        for (Integer linha : conjuntoLinha) {
+            if (qtdColunaCobreLinha[linha] < 2){
+                return false;
+            }
+        }
+        return true;
     }
 }

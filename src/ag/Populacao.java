@@ -13,8 +13,11 @@ public class Populacao {
     }
     
     public void gerarPopulacaoInicial(ArrayList<Integer>[] listaLinha, ArrayList<Integer>[] listaColuna, Double[] listaCusto){
-        Cromossomo.gerarIndividuo(listaLinha, listaColuna, listaCusto);
-        
+        for (int i = 0; i < tam_populacao; i++) {
+            Cromossomo c = new Cromossomo();
+            c.gerarIndividuo(listaLinha, listaColuna, listaCusto);
+            c.eliminaRedundancia(listaColuna);
+            populacao[i] = c;
+        }
     }
-    
 }
