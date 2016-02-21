@@ -4,7 +4,8 @@ import java.util.ArrayList;
 
 public class AlgoritmoGenetico {
     
-    public static final int TAM_POPULACAO = 5000;
+    public static final int TAM_POPULACAO = 500;
+    public static final int QTD_TORNEIO = 5;
     
     //pode ser vetor e pode ser hash set 
     private ArrayList<Integer>[] listaColuna;
@@ -50,5 +51,19 @@ public class AlgoritmoGenetico {
     
     public void executar(){
         populacao.gerarPopulacaoInicial(listaLinha, listaColuna, listaCusto);
+        selecao();
+    }
+    
+    // Seleção de individuos por torneio
+    public Cromossomo selecao(){
+        Cromossomo c = null;
+        for (int i = 0; i < QTD_TORNEIO; i++) {
+            int random_pos = Util.getRandomInt(TAM_POPULACAO);
+            Cromossomo rand = populacao.getPopulacao()[random_pos];
+            if (c == null || rand.getCustoTotal() < c.getCustoTotal()){
+                c = rand;
+            }
+        }
+        return c;
     }
 }

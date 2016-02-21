@@ -1,7 +1,6 @@
 package ag;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Cromossomo {
     
@@ -19,9 +18,18 @@ public class Cromossomo {
         colunas.add(index);
         custoTotal += custo;
     }
+    
+    public void removeColuna(int coluna, Double[] listaCusto){
+        colunas.remove(new Integer(coluna));
+        custoTotal = custoTotal - listaCusto[coluna];
+    }
 
     public ArrayList<Integer> getColunas() {
         return colunas;
+    }
+
+    public double getCustoTotal() {
+        return custoTotal;
     }
     
     public void gerarIndividuo(ArrayList<Integer>[] listaLinha, ArrayList<Integer>[] listaColuna, Double[] listaCusto){
@@ -70,7 +78,7 @@ public class Cromossomo {
         }
     }
     
-    public void eliminaRedundancia(ArrayList<Integer>[] listaColuna){
+    public void eliminaRedundancia(ArrayList<Integer>[] listaColuna, Double[] listaCusto){
         ArrayList<Integer> T = new ArrayList<>(this.colunas);
         while (!T.isEmpty()){
             int random_pos = Util.getRandomInt(T.size());
@@ -78,7 +86,7 @@ public class Cromossomo {
             T.remove(random_pos);
             
             if (isRedundante(listaColuna[coluna])){
-                this.colunas.remove(new Integer(coluna));
+                removeColuna(coluna, listaCusto);
                 
                 for (Integer linha : listaColuna[coluna]) {
                     qtdColunaCobreLinha[linha]--;
