@@ -14,9 +14,23 @@ public class Cromossomo {
         custoTotal = 0;
     }
     
-    public void addColuna(int index, double custo){
-        colunas.add(index);
+    public Cromossomo(ArrayList<Integer> colunas, ArrayList<Integer>[] listaColuna, ArrayList<Integer>[] listaLinha, Double[] listaCusto){
+        this();
+        qtdColunaCobreLinha = new int[listaLinha.length];
+        for (Integer coluna : colunas) {
+            addColuna(coluna, listaCusto[coluna], listaColuna);
+        }
+    }
+    
+    public void addColuna(int coluna, double custo, ArrayList<Integer>[] listaColuna){
+        if (colunas.contains(coluna)){
+            return;
+        }
+        colunas.add(coluna);
         custoTotal += custo;
+        for (Integer linha : listaColuna[coluna]) {
+            qtdColunaCobreLinha[linha]++;
+        }
     }
     
     public void removeColuna(int coluna, Double[] listaCusto){
@@ -50,8 +64,9 @@ public class Cromossomo {
             ArrayList<Integer> conjuntoColuna = listaLinha[linha];
             int menorColuna = colunaMinimizaCusto(conjuntoColuna, linhasDescobertas, listaColuna, listaCusto);
             
-            this.addColuna(menorColuna, listaCusto[menorColuna]);
-            removerCobertos(qtdColunaCobreLinha, linhasDescobertas, listaColuna[menorColuna]);
+            this.addColuna(menorColuna, listaCusto[menorColuna], listaColuna);
+            linhasDescobertas.removeAll(listaColuna[menorColuna]);
+            //removerCobertos(qtdColunaCobreLinha, linhasDescobertas, listaColuna[menorColuna]);
         }
     }
     
@@ -61,7 +76,7 @@ public class Cromossomo {
         for (int i = 0; i < conjuntoColuna.size(); i++) {
             int coluna = conjuntoColuna.get(i);
             double custo = listaCusto[coluna];
-            int intersecao_size = Util.sizeIntersecao(linhasDescobertas, listaColuna[coluna]);
+            int intersecao_size = Util.intersecao(linhasDescobertas, listaColuna[coluna]).size();
             if ((custo / intersecao_size) < menor) {
                 menor = custo / intersecao_size;
                 menorColuna = coluna;
@@ -70,13 +85,13 @@ public class Cromossomo {
         return menorColuna;
     }
     
-    private static void removerCobertos(int[] qtdColunaCobreLinha, ArrayList<Integer> linhasDescobertas, ArrayList<Integer> conjuntoLinhas) {
+    /*private static void removerCobertos(int[] qtdColunaCobreLinha, ArrayList<Integer> linhasDescobertas, ArrayList<Integer> conjuntoLinhas) {
         for (int i = 0; i < conjuntoLinhas.size(); i++) {
             int linha = conjuntoLinhas.get(i);
             qtdColunaCobreLinha[linha]++;
             linhasDescobertas.remove(new Integer(linha));
         }
-    }
+    }*/
     
     public void eliminaRedundancia(ArrayList<Integer>[] listaColuna, Double[] listaCusto){
         ArrayList<Integer> T = new ArrayList<>(this.colunas);
