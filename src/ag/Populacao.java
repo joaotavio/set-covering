@@ -6,10 +6,17 @@ public class Populacao {
     
     private int tam_populacao;
     private Cromossomo[] populacao;
+    
+    private int posMaisApto;
+    private int posMenosApto;
+    
+    public double media = 0.0;
 
     public Populacao(int tam_populacao) {
         this.tam_populacao = tam_populacao;
         populacao = new Cromossomo[tam_populacao];
+        posMaisApto = -1;
+        posMenosApto = -1;
     }
 
     public Cromossomo[] getPopulacao() {
@@ -22,20 +29,35 @@ public class Populacao {
             c.gerarIndividuo(listaLinha, listaColuna, listaCusto);
             c.eliminaRedundancia(listaColuna, listaCusto);
             populacao[i] = c;
+            classifica(i);
         }
-        /*int ig = 0;
-        for(int ia = 0; ia<tam_populacao-1; ia++){
-            //System.out.print(ia + " --> ");
-            for(int ib = ia+1; ib < tam_populacao; ib++){
-                //System.out.print(ib + "--");
-                if(populacao[ia].getColunas().equals(populacao[ib].getColunas())){
-                    //System.out.println(ia + " e " + ib + "--> igual!!");
-                    ig++;
-                }
-            }
-            //System.out.println();
+    }
+    
+    private void classifica(int index){
+        Cromossomo c = populacao[index];
+        if (posMaisApto == -1 || c.getCustoTotal() < populacao[posMaisApto].getCustoTotal()){
+            posMaisApto = index;
         }
-        
-        System.out.println(ig);*/
+        if (posMenosApto == -1 || c.getCustoTotal() > populacao[posMenosApto].getCustoTotal()){
+            posMenosApto = index;
+        }
+    }
+    
+    public void atualizar(Cromossomo novo){
+        populacao[posMenosApto] = novo;
+        media = 0;
+        for (int i = 0; i < populacao.length; i++) {
+            classifica(i);
+            media += populacao[i].getCustoTotal();
+        }
+        media = media / tam_populacao;
+    }
+    
+    public Cromossomo maisApto(){
+        return populacao[posMaisApto];
+    }
+    
+    public Cromossomo menosApto(){
+        return populacao[posMenosApto];
     }
 }

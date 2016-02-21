@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 public class AlgoritmoGenetico {
     
-    public static final int TAM_POPULACAO = 50;
+    public static final int TAM_POPULACAO = 1000;
     public static final double TAXA_MIN_MUTACAO = 0.5;
-    public static final int NUM_GERACOES = 10;
+    public static final int NUM_GERACOES = 1000;
     public static final int QTD_TORNEIO = 5;
     
     //pode ser vetor e pode ser hash set 
@@ -53,9 +53,31 @@ public class AlgoritmoGenetico {
     
     public void executar(){
         populacao.gerarPopulacaoInicial(listaLinha, listaColuna, listaCusto);
-        
-        Cromossomo filho = crossover();
-        
+        int i = 0;
+        while (i < NUM_GERACOES){
+            Cromossomo filho = crossover();
+            
+            Cromossomo maisApto = populacao.maisApto();
+            Cromossomo menosApto = populacao.menosApto();
+            
+            double random_double = Util.getRandomDouble();
+            if (random_double < taxaMutacao(maisApto.getCustoTotal(), menosApto.getCustoTotal())){
+                mutacao(filho);
+            }
+            
+            if (filho.getCustoTotal() < menosApto.getCustoTotal()){
+                populacao.atualizar(filho);
+                i = 0;
+            }
+            else {
+                i++;
+            }
+            System.out.print(i);
+            System.out.println(" -> "+populacao.maisApto().getCustoTotal() + " - Media: "+populacao.media);
+        }
+        /*for (Cromossomo cromossomo : populacao.getPopulacao()) {
+            System.out.println(cromossomo.getColunas());
+        }*/
     }
     
     // Seleção de individuos por torneio
@@ -85,20 +107,14 @@ public class AlgoritmoGenetico {
         return filho;
     }
     
-    public Cromossomo mutacao(Cromossomo C){
+    public void mutacao(Cromossomo C){
         double random_double = Util.getRandomDouble();
         int n = (int)(random_double * C.getColunas().size());
-        Cromossomo mut = new Cromossomo(C.getColunas(), listaColuna, listaLinha, listaCusto);
         for (int i = 0; i < n; i++) {
             int random_col = Util.getRandomInt(listaColuna.length);
-            mut.addColuna(random_col, listaCusto[random_col], listaColuna);
+            C.addColuna(random_col, listaCusto[random_col], listaColuna);
         }
-        mut.eliminaRedundancia(listaColuna, listaCusto);
-        return mut;
-    }
-    
-    public void atualizarPopulacao(){
-        
+        C.eliminaRedundancia(listaColuna, listaCusto);
     }
     
     public Double taxaMutacao(Double custoMaisApto, Double custoMenosApto){
