@@ -47,9 +47,6 @@ public class Cromossomo {
     }
     
     public void gerarIndividuo(ArrayList<Integer>[] listaLinha, ArrayList<Integer>[] listaColuna, Double[] listaCusto){
-        //listaLinha = ALFA
-        //listaColuna = BETA
-        
         ArrayList<Integer> linhasDescobertas = new ArrayList<>();
         for (int i = 0; i < listaLinha.length; i++) {
             linhasDescobertas.add(i);
@@ -66,7 +63,6 @@ public class Cromossomo {
             
             this.addColuna(menorColuna, listaCusto[menorColuna], listaColuna);
             linhasDescobertas.removeAll(listaColuna[menorColuna]);
-            //removerCobertos(qtdColunaCobreLinha, linhasDescobertas, listaColuna[menorColuna]);
         }
     }
     
@@ -84,14 +80,6 @@ public class Cromossomo {
         }
         return menorColuna;
     }
-    
-    /*private static void removerCobertos(int[] qtdColunaCobreLinha, ArrayList<Integer> linhasDescobertas, ArrayList<Integer> conjuntoLinhas) {
-        for (int i = 0; i < conjuntoLinhas.size(); i++) {
-            int linha = conjuntoLinhas.get(i);
-            qtdColunaCobreLinha[linha]++;
-            linhasDescobertas.remove(new Integer(linha));
-        }
-    }*/
     
     public void eliminaRedundancia(ArrayList<Integer>[] listaColuna, Double[] listaCusto){
         ArrayList<Integer> T = new ArrayList<>(this.colunas);

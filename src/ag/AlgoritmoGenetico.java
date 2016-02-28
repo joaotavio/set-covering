@@ -4,19 +4,22 @@ import java.util.ArrayList;
 
 public class AlgoritmoGenetico {
     
-    public static final int TAM_POPULACAO = 1000;
-    public static final double TAXA_MIN_MUTACAO = 0.5;
-    public static final int NUM_GERACOES = 1000;
-    public static final int QTD_TORNEIO = 5;
+    public int TAM_POPULACAO = 500;
+    public double TAXA_MIN_MUTACAO = 0.1;
+    public int NUM_GERACOES = 1000;
+    public static final int QTD_TORNEIO = 2;
     
     //pode ser vetor e pode ser hash set 
-    private ArrayList<Integer>[] listaColuna;
-    private ArrayList<Integer>[] listaLinha;
-    private Double[] listaCusto;
+    private final ArrayList<Integer>[] listaColuna;
+    private final ArrayList<Integer>[] listaLinha;
+    private final Double[] listaCusto;
     
-    private Populacao populacao;
+    private final Populacao populacao;
     
-    public AlgoritmoGenetico(int nLinha, int nColuna){
+    public AlgoritmoGenetico(int nLinha, int nColuna, int tam_populacao, double taxa_min_mutacao, int num_geracoes){
+        TAM_POPULACAO = tam_populacao;
+        TAXA_MIN_MUTACAO = taxa_min_mutacao;
+        NUM_GERACOES = num_geracoes;
         listaColuna = new ArrayList[nColuna];
         listaLinha = new ArrayList[nLinha];
         listaCusto = new Double[nColuna];
@@ -41,16 +44,6 @@ public class AlgoritmoGenetico {
         listaLinha[linha].add(coluna);
     }
     
-    public void imprimir(){
-        for (int i = 0; i < listaColuna.length; i++) {
-            System.out.print(listaCusto[i]+" - ");
-            System.out.println(listaColuna[i]);
-        }
-        for (int i = 0; i < listaLinha.length; i++) {
-            System.out.println(listaLinha[i]);
-        }
-    }
-    
     public void executar(){
         populacao.gerarPopulacaoInicial(listaLinha, listaColuna, listaCusto);
         int i = 0;
@@ -72,12 +65,11 @@ public class AlgoritmoGenetico {
             else {
                 i++;
             }
-            System.out.print(i);
-            System.out.println(" -> "+populacao.maisApto().getCustoTotal() + " - Media: "+populacao.media);
         }
-        /*for (Cromossomo cromossomo : populacao.getPopulacao()) {
-            System.out.println(cromossomo.getColunas());
-        }*/
+        System.out.println("MELHOR SOLUÇÂO:");
+        System.out.println("COLUNAS: "+populacao.maisApto().getColunas());
+        System.out.println("CUSTO: "+populacao.maisApto().getCustoTotal());
+        
     }
     
     // Seleção de individuos por torneio

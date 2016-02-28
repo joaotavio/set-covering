@@ -4,13 +4,11 @@ import java.util.ArrayList;
 
 public class Populacao {
     
-    private int tam_populacao;
-    private Cromossomo[] populacao;
+    private final int tam_populacao;
+    private final Cromossomo[] populacao;
     
     private int posMaisApto;
     private int posMenosApto;
-    
-    public double media = 0.0;
 
     public Populacao(int tam_populacao) {
         this.tam_populacao = tam_populacao;
@@ -45,12 +43,9 @@ public class Populacao {
     
     public void atualizar(Cromossomo novo){
         populacao[posMenosApto] = novo;
-        media = 0;
         for (int i = 0; i < populacao.length; i++) {
             classifica(i);
-            media += populacao[i].getCustoTotal();
         }
-        media = media / tam_populacao;
     }
     
     public Cromossomo maisApto(){
